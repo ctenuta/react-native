@@ -1097,7 +1097,11 @@ public abstract class DevSupportManagerBase implements DevSupportManager {
       if (!mIsReceiverRegistered) {
         IntentFilter filter = new IntentFilter();
         filter.addAction(getReloadAppAction(mApplicationContext));
-        mApplicationContext.registerReceiver(mReloadAppBroadcastReceiver, filter);
+        if (Build.VERSION.SDK_INT >= 34 && context.getApplicationInfo().targetSdkVersion >= 34) {
+          mApplicationContext.registerReceiver(mReloadAppBroadcastReceiver, filter,  mApplicationContext.RECEIVER_EXPORTED);
+        } else {
+          mApplicationContext.registerReceiver(mReloadAppBroadcastReceiver, filter);
+        }
         mIsReceiverRegistered = true;
       }
 
